@@ -1,0 +1,11 @@
+body {
+    padding-top: 4.5rem;
+}
+
+.container {
+    max-width:95%;
+}
+
+#location_input {
+    margin-bottom:0;
+}
