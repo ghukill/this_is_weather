@@ -16,6 +16,8 @@ let vm = new Vue({
 
 /**
  * Client for weather.gov API
+ *
+ * API spec: https://www.weather.gov/documentation/services-web-api
  */
 class WeatherGovAPI {
 
