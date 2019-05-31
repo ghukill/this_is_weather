@@ -1,5 +1,7 @@
 /**
  * THIS IS WEATHER, 2
+ *
+ * TODO: handle 404 for missing stations
  */
 
 
@@ -20,11 +22,11 @@ let vm = new Vue({
     },
     methods:{
 
-        reset_station: function(){
-            this.selected_osm_location = null;
-            this.nearest_station = undefined;
-            this.latest_station_observations = undefined;
-        },
+        // reset_station: function(){
+        //     this.selected_osm_location = null;
+        //     this.nearest_station = undefined;
+        //     this.latest_station_observations = undefined;
+        // },
 
         use_current_location: function() {
 
@@ -59,7 +61,10 @@ let vm = new Vue({
         search: function (){
 
             // reset
-            this.reset_station();
+            // this.reset_station();
+
+            // turn on disambiguation window
+            this.osm_location_disambiguate = true;
 
             // init OSM client and fire OSM nomination search
             let osm_client = new OSMNominationClient(this);
@@ -85,6 +90,8 @@ let vm = new Vue({
         },
 
         get_conditions: function () {
+
+            console.log('WOOOT!');
 
             // init weather.gov API
             let wgov_client = new WeatherGovAPIClient();
