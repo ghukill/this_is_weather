@@ -49,23 +49,20 @@
             <div role="main" class="container">
 
                 <div class="row">
-                    <div class="col-md-12">
-                        <h3 v-if="search_term != ''">Search term: <code>{{ search_term }}</code></h3>
-                    </div>
-                </div>
-
-                <div class="row">
                     <div class="col-md-6">
                         <h3 v-if="selected_osm_location != undefined">Location: <code>{{ selected_osm_location.display_name }} ({{ lat }}, {{ lon }})</code></h3>
                         <h3 v-if="nearest_station != undefined">Weather Station: <code>{{ nearest_station.properties.name }}</code></h3>
                     </div>
-                    <div v-if="osm_location_disambiguate" class="col-6">
-                        <h3>Disambiguate Location:</h3>
-                        <ul>
-                            <li v-for="location in osm_locations">
-                                <a v-on:click.prevent="select_location(location)" href="">{{ location.display_name }}</a>
-                            </li>
-                        </ul>
+                    <div class="col-6">
+                        <h3 v-if="search_term != ''">Search term: <code>{{ search_term }}</code></h3>
+                        <template v-if="osm_location_disambiguate && search_term != ''">
+                            <h3>Disambiguate Location:</h3>
+                            <ul>
+                                <li v-for="location in osm_locations">
+                                    <a v-on:click.prevent="select_location(location)" href="">{{ location.display_name }}</a>
+                                </li>
+                            </ul>
+                        </template>
                     </div>
                 </div>
 
