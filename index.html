@@ -38,8 +38,8 @@
 <!--                            <a class="nav-link" href="#">Link</a>-->
 <!--                        </li>-->
                     </ul>
-                    <form id="location_input" class="form-inline mt-2 mt-md-0">
-                        <input class="form-control mr-sm-2" type="text" v-model="location" placeholder="search location...">
+                    <form id="location_input" class="form-inline mt-2 mt-md-0" v-on:submit.prevent="search">
+                        <input class="form-control mr-sm-2" type="text" v-model="search_term" placeholder="search location...">
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </form>
                 </div>
@@ -47,7 +47,47 @@
 
             <div role="main" class="container">
 
-                <h2>Location: <code>{{ location }}</code></h2>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 v-if="search_term != ''">Search term: <code>{{ search_term }}</code></h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <template v-if="selected_osm_location === null"></template>
+                        <template v-else-if="selected_osm_location === undefined">
+                            <h3>Select a location to disambiguate:</h3>
+                            <ul>
+                                <li v-for="location in osm_locations">
+                                    <a v-on:click.prevent="select_location(location)" href="">{{ location.display_name }}</a>
+                                </li>
+                            </ul>
+                        </template>
+                        <template v-else>
+                            <h3>Selected location: <strong>{{ selected_osm_location.display_name }}</strong></h3>
+                        </template>
+
+                    </div>
+                </div>
+
+                <div v-if="latest_station_observations != undefined" class="row">
+                    <div class="col-md-12">
+                        <h3>Current Conditions</h3>
+                        <table>
+                            <tr>
+                                <th>Temp</th>
+                                <td>{{ latest_station_observations.properties.temperature.value }}</td>
+                            </tr>
+                            <tr>
+                                <th>Humidity</th>
+                                <td>{{ latest_station_observations.properties.relativeHumidity.value }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
 
             </div>
 
