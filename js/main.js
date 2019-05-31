@@ -1,5 +1,5 @@
 /**
- * THIS IS WEATHER
+ * THIS IS WEATHER, 2
  */
 
 
@@ -11,20 +11,54 @@ let vm = new Vue({
     data: {
         search_term: '',
         osm_locations:[],
+        osm_location_disambiguate:false,
         selected_osm_location:null,
+        lat:undefined,
+        lon:undefined,
         nearest_station:undefined,
         latest_station_observations:undefined
     },
     methods:{
 
         reset_station: function(){
-            this.selected_osm_location = undefined;
+            this.selected_osm_location = null;
             this.nearest_station = undefined;
             this.latest_station_observations = undefined;
         },
 
+        use_current_location: function() {
+
+            // get position
+            var getPosition = function (options) {
+                return new Promise(function (resolve, reject) {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, options);
+                });
+            }
+
+            getPosition()
+                .then((position) => {
+
+                    // set as null
+                    vm.$data.selected_osm_location = {
+                        display_name: "Current Location"
+                    };
+
+                    // set coords
+                    vm.$data.lat = position.coords.latitude;
+                    vm.$data.lon = position.coords.longitude;
+
+                    // update conditions
+                    vm.$root.get_conditions();
+
+                })
+                .catch((err) => {
+                    console.error(err.message);
+                });
+        },
+
         search: function (){
 
+            // reset
             this.reset_station();
 
             // init OSM client and fire OSM nomination search
@@ -41,6 +75,10 @@ let vm = new Vue({
             // set selected location
             this.selected_osm_location = location;
 
+            // set latitude and longitude
+            this.lat = location.lat;
+            this.lon = location.lon;
+
             // get conditions for this area
             this.get_conditions();
 
@@ -52,8 +90,9 @@ let vm = new Vue({
             let wgov_client = new WeatherGovAPIClient();
 
             // query via lat/lon and get nearest station
+            // PROBLEM: With 4+ decimal points, 301 redirect, debuggers cannot follow
             nearest_station_promise = wgov_client.select_nearest_station(
-                this.selected_osm_location.lat, this.selected_osm_location.lon); // PROBLEM: too many numbers, redirecting, not cool for CORS
+                this.lat, this.lon);
 
             // when done, do other stuff...
             nearest_station_promise.then(function(data){
@@ -142,3 +181,5 @@ class OSMNominationClient {
     }
 
 }
+
+
