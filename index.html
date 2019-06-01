@@ -31,12 +31,12 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
-<!--                        <li class="nav-item active">-->
-<!--                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="#">Link</a>-->
-<!--                        </li>-->
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Bird's Eye</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Precipitation</a>
+                        </li>
                     </ul>
                     <form id="location_input" class="form-inline mt-2 mt-md-0" v-on:submit.prevent="search">
                         <input class="form-control mr-sm-2" type="text" v-model="search_term" placeholder="search location...">
@@ -49,14 +49,14 @@
             <div role="main" class="container">
 
                 <div class="row">
-                    <div class="col-md-6">
-                        <h3 v-if="selected_osm_location != undefined">Location: <code>{{ selected_osm_location.display_name }} ({{ lat }}, {{ lon }})</code></h3>
-                        <h3 v-if="nearest_station != undefined">Weather Station: <code>{{ nearest_station.properties.name }}</code></h3>
+                    <div class="col-md-8">
+                        <h3 v-if="selected_osm_location != undefined"><code>{{ selected_osm_location.display_name }} ({{ lat }}, {{ lon }})</code></h3>
+                        <h3 v-if="nearest_station != undefined"><code>{{ nearest_station.properties.name }}</code></h3>
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-4">
                         <h3 v-if="search_term != ''">Search term: <code>{{ search_term }}</code></h3>
                         <template v-if="osm_location_disambiguate && search_term != ''">
-                            <h3>Disambiguate Location:</h3>
+<!--                            <h3>Disambiguate Location:</h3>-->
                             <ul>
                                 <li v-for="location in osm_locations">
                                     <a v-on:click.prevent="select_location(location)" href="">{{ location.display_name }}</a>
@@ -66,20 +66,32 @@
                     </div>
                 </div>
 
-                <div v-if="latest_station_observations != undefined" class="row">
-                    <div class="col-md-12">
-                        <h3>Current Conditions</h3>
-                        <table>
-                            <tr>
-                                <th>Temp</th>
-                                <td>{{ latest_station_observations.properties.temperature.value }}</td>
-                            </tr>
-                            <tr>
-                                <th>Humidity</th>
-                                <td>{{ latest_station_observations.properties.relativeHumidity.value }}</td>
-                            </tr>
-                        </table>
+                <!-- show conditions -->
+                <div id="render_conditions" v-if="latest_station_observations != undefined">
+
+                    <!-- conditions table -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table">
+                                <tr>
+                                    <th>Temperature</th>
+                                    <td>{{ latest_station_observations.properties.temperature.value }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Humidity</th>
+                                    <td>{{ latest_station_observations.properties.relativeHumidity.value }}</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
+
+                    <!-- rainviewer -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <iframe id="rainviewer_iframe" v-bind:src="'https://www.rainviewer.com/map.html?loc=' + lat + ',' + lon + ',7&oFa=0&oC=0&oU=0&oCS=0&oF=1&oAP=0&rmt=3&c=5&o=70&lm=0&th=1&sm=0&sn=1'" width="100%" frameborder="0" style="border:0;height:50vh;" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>

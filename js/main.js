@@ -22,12 +22,6 @@ let vm = new Vue({
     },
     methods:{
 
-        // reset_station: function(){
-        //     this.selected_osm_location = null;
-        //     this.nearest_station = undefined;
-        //     this.latest_station_observations = undefined;
-        // },
-
         use_current_location: function() {
 
             // get position
@@ -60,9 +54,6 @@ let vm = new Vue({
 
         search: function (){
 
-            // reset
-            // this.reset_station();
-
             // turn on disambiguation window
             this.osm_location_disambiguate = true;
 
@@ -90,8 +81,6 @@ let vm = new Vue({
         },
 
         get_conditions: function () {
-
-            console.log('WOOOT!');
 
             // init weather.gov API
             let wgov_client = new WeatherGovAPIClient();
